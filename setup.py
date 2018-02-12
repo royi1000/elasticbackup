@@ -2,7 +2,7 @@ import sys
 
 from setuptools import setup, find_packages
 
-requirements = ['elasticsearch>=1.0.0,<1.1.0', 'tqdm==1.19.5']
+requirements = ['elasticsearch>=1.0.0,<1.1.0', 'tqdm==4.19.5']
 
 if sys.version_info[:2] < (2, 7):
     requirements.append('argparse')
