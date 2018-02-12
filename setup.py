@@ -26,8 +26,8 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'elasticbackup = elasticbackup.backup:main',
-            'elasticrestore = elasticbackup.restore:main'
+            'elasticbackup2 = elasticbackup.backup:main',
+            'elasticrestore2 = elasticbackup.restore:main'
         ]
     }
 )
