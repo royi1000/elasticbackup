@@ -39,10 +39,14 @@ def create_documents(es, index, restore_file, batch_size=1000):
                   unit='docs', mininterval=2) as pbar:
             with gzip.open(restore_file, 'rb') as f:
                 for size, batch in document_batches(f, batch_size):
-                    es.bulk(index=index, body=batch)
+                    res = es.bulk(index=index, body=batch)
+                    if res['errors']:
+                        log.error(res)
+                        raise ValueError("Error restoring")
                     pbar.update(size)
     else:
         log.warn("skipping empty file: {}".format(restore_file))
+
 
 def document_batches(fp, batch_size):
     i = 0
@@ -51,15 +55,13 @@ def document_batches(fp, batch_size):
     for line in fp:
         obj = json.loads(line)
         src = obj.pop('_source')
-        batch.append(json.dumps({"create": obj}))
+        batch.append(json.dumps({"index": obj}))
         batch.append(json.dumps(src))
         i += 1
-
         if i >= batch_size:
             yield i, batch
             i = 0
             batch = []
-
     if batch:
         yield i, batch
 
